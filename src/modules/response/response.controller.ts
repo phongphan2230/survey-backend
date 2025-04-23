@@ -8,27 +8,27 @@ export class ResponseController {
   constructor(private readonly responseService: ResponseService) {}
 
   @Post()
-  create(@Body() createResponseDto: CreateResponseDto) {
-    return this.responseService.create(createResponseDto);
+  async create(@Body() createResponseDto: CreateResponseDto) {
+    return await this.responseService.create(createResponseDto);
   }
 
   @Get()
-  findAll() {
-    return this.responseService.findAll();
+  async findAll() {
+    return await this.responseService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.responseService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.responseService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResponseDto: UpdateResponseDto) {
-    return this.responseService.update(+id, updateResponseDto);
+  async update(@Param('id') id: string, @Body() updateResponseDto: UpdateResponseDto) {
+    return await this.responseService.update(id, updateResponseDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.responseService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.responseService.remove(id);
   }
 }

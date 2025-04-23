@@ -1,11 +1,15 @@
 import { HttpStatus } from '@nestjs/common';
 
 export type TErrorCode =
-   'InternalServer'|
-   'InvalidInput'  |
-   'Unauthorized'  |
-   'NotFound'      |
-   'AlreadyExists';
+   'InternalServer' |
+   'InvalidInput'   |
+   'Unauthorized'   |
+   'NotFound'       |
+   'AlreadyExists'  |
+   'Forbidden'      | // Thêm trạng thái lỗi mới
+   'CreationFailed' |
+   'UpdateFailed'   |
+   'DeletionFailed';
 
 export interface IErrorResponse {
   statusCode: number;
@@ -26,25 +30,41 @@ export const ERROR_RESPONSE: Record<TErrorCode, IErrorResponse> = {
     message: 'Unauthorized access',
   },
   NotFound: {
-    statusCode: HttpStatus.BAD_REQUEST,
+    statusCode: HttpStatus.NOT_FOUND,
     message: 'Resource not found',
   },
   AlreadyExists: {
-    statusCode: HttpStatus.BAD_REQUEST,
+    statusCode: HttpStatus.CONFLICT,
     message: 'Resource already exists',
+  },
+  Forbidden: {
+    statusCode: HttpStatus.FORBIDDEN,
+    message: 'Access to this resource is forbidden',
+  },
+  CreationFailed: {
+    statusCode: HttpStatus.BAD_REQUEST,
+    message: 'Failed to create resource',
+  },
+  UpdateFailed: {
+    statusCode: HttpStatus.BAD_REQUEST,
+    message: 'Failed to update resource',
+  },
+  DeletionFailed: {
+    statusCode: HttpStatus.BAD_REQUEST,
+    message: 'Failed to delete resource',
   },
 };
 
-
-
-//hanlde response success
 export type TSuccessCode =
-   'RequestSuccess'|
-   'LoginSuccess'  |
-   'LogoutSuccess' |
-   'ResourceCreated' |
-   'DataUpdated' |
-   "CreatedSuccess";
+   'RequestSuccess'   |
+   'LoginSuccess'     |
+   'LogoutSuccess'    |
+   'ResourceCreated'  |
+   'DataUpdated'      |
+   'CreatedSuccess'   |
+   'ResourceDeleted'  |
+   'OperationSuccess' |
+   'ResourceUpdated'  ;
 
 export interface IBaseResponse {
   statusCode: number;
@@ -75,5 +95,17 @@ export const SUCCESS_RESPONSE: Record<TSuccessCode, IBaseResponse> = {
   CreatedSuccess: {
     statusCode: HttpStatus.OK,
     message: 'Created successfully',
+  },
+  ResourceDeleted: {
+    statusCode: HttpStatus.OK,
+    message: 'Resource deleted successfully',
+  },
+  ResourceUpdated: {
+    statusCode: HttpStatus.OK,
+    message: 'Resource Update successfully',
+  },
+  OperationSuccess: {
+    statusCode: HttpStatus.OK,
+    message: 'Operation completed successfully',
   },
 };

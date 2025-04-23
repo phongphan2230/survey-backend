@@ -1,9 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Survey, SurveyDocument } from '../../entities/survey-entites';
 import { CreateSurveyDto } from './dto/create-survey.dto';
 import { UpdateSurveyDto } from './dto/update-survey.dto';
+import { CustomHttpException } from '../../common/exception/custom-error.exception';
+import { ERROR_RESPONSE } from '../../common/response.constant';
 
 @Injectable()
 export class SurveyService {
@@ -17,13 +19,17 @@ export class SurveyService {
   }
 
   async findAll(): Promise<Survey[]> {
-    return this.surveyModel.find().exec();
+    const surveys = await this.surveyModel.find().exec();
+    if (!surveys || surveys.length === 0) {
+      throw new CustomHttpException(ERROR_RESPONSE.NotFound);
+    }
+    return surveys;
   }
 
   async findOne(id: string): Promise<Survey> {
     const survey = await this.surveyModel.findById(id).exec();
     if (!survey) {
-      throw new NotFoundException('Survey not found');
+      throw new CustomHttpException(ERROR_RESPONSE.NotFound);
     }
     return survey;
   }
@@ -33,15 +39,16 @@ export class SurveyService {
       .findByIdAndUpdate(id, updateSurveyDto, { new: true })
       .exec();
     if (!updatedSurvey) {
-      throw new NotFoundException('Survey not found');
+      throw new CustomHttpException(ERROR_RESPONSE.UpdateFailed);
     }
     return updatedSurvey;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<any> {
     const result = await this.surveyModel.findByIdAndDelete(id).exec();
     if (!result) {
-      throw new NotFoundException('Survey not found');
+      throw new CustomHttpException(ERROR_RESPONSE.DeletionFailed);
     }
+    return { message: 'Survey deleted successfully' };
   }
 }

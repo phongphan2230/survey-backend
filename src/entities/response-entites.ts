@@ -4,11 +4,11 @@ import { Document, Types, Schema as MongooseSchema } from 'mongoose';
 export type ResponseDocument = Response & Document;
 
 class Answer {
-  @Prop({ type: Types.ObjectId, ref: 'Question', required: true })
-  question: Types.ObjectId;
+  @Prop({ required: true })
+  question: String;
 
-  @Prop({type: MongooseSchema.Types.Mixed, required: true })
-  value: any;
+  @Prop({ required: true })
+  value: string;
 }
 
 const AnswerSchema = SchemaFactory.createForClass(Answer);
